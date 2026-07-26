@@ -32,7 +32,6 @@ void ui_draw_buffer(Editor *ed) {
   int max_rows = LINES - 3;
 
   for (int y = 0; y < LINES - 3; y++) {
-
     int file_row = y + ed->row_offset;
 
     if (file_row >= ed->buffer.line_count)
@@ -40,8 +39,9 @@ void ui_draw_buffer(Editor *ed) {
 
     char *line = ed->buffer.lines[file_row];
 
-    if ((int)strlen(line) > ed->col_offset)
+    if ((int)strlen(line) > ed->col_offset) {
       mvaddnstr(y + 1, 0, line + ed->col_offset, COLS);
+    }
   }
 }
 
@@ -49,10 +49,8 @@ void ui_draw_footer(void) {
   const char *str = "Ctrl+S: Save\t\tCtrl+Q: Quit";
 
   attron(A_REVERSE);
-
   mvhline(LINES - 2, 0, ' ', COLS);
   mvprintw(LINES - 2, 3, "%s", str);
-
   attroff(A_REVERSE);
 }
 
