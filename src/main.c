@@ -2,7 +2,6 @@
 #include "includes/input.h"
 #include "includes/ui.h"
 #include "includes/util.h"
-#include <ncurses.h>
 
 int main(int argc, char **argv) {
   Editor editor = {

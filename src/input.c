@@ -53,7 +53,15 @@ bool read_keys(Editor *ed) {
     break;
   }
   case KEY_BACKSPACE:
-    del_char(ed);
+    if (ed->cursor_x == 0)
+      del_newline(ed);
+    else
+      del_char(ed);
+    break;
+  case '\n':
+  case KEY_ENTER:
+  case '\r':
+    insert_newline(ed);
     break;
   default:
     if (c >= 32 && c <= 126) {
