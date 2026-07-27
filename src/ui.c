@@ -39,8 +39,24 @@ void ui_draw_buffer(Editor *ed) {
 
     char *line = ed->buffer.lines[file_row];
 
-    if ((int)strlen(line) > ed->col_offset) {
-      mvaddnstr(y + 1, 0, line + ed->col_offset, COLS);
+    char rendered[8192];
+    int j = 0;
+
+    for (int i = 0; line[i] != '\0'; i++) {
+      if (line[i] == '\t') {
+        rendered[j++] = ' ';
+        rendered[j++] = ' ';
+        rendered[j++] = ' ';
+        rendered[j++] = ' ';
+      } else {
+        rendered[j++] = line[i];
+      }
+    }
+
+    rendered[j] = '\0';
+
+    if ((int)strlen(rendered) > ed->col_offset) {
+      mvaddnstr(y + 1, 0, rendered + ed->col_offset, COLS);
     }
   }
 }
@@ -73,7 +89,17 @@ void ui_refresh(Editor *ed) {
   ui_draw_buffer(ed);
   ui_draw_footer();
 
-  move((ed->cursor_y - 1 - ed->row_offset) + 1, ed->cursor_x - ed->col_offset);
+  int screen_x = 0;
+  char *line = ed->buffer.lines[ed->cursor_y - 1];
+
+  for (int i = 0; i < ed->cursor_x; i++) {
+    if (line[i] == '\t')
+      screen_x += 4;
+    else
+      screen_x++;
+  }
+
+  move((ed->cursor_y - 1 - ed->row_offset) + 1, screen_x - ed->col_offset);
 
   refresh();
 }
